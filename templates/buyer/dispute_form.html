@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Open a Dispute{% endblock %}
+{% block body %}
+<h1>Open a Dispute</h1>
+<p class="subtitle">Select the order and product you are experiencing issues with, and describe the problem below.</p>
+
+<form method="post" class="card-form">
+    <!-- Required Flask-WTF CSRF Token -->
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+    <label>Select Order & Product
+        <select name="order_id" required class="form-control">
+            <option value="">-- Choose an order --</option>
+            {% for o in orders %}
+                <option value="{{ o.id }}">
+                    Order #{{ o.id }} ({{ o.created.strftime('%Y-%m-%d') }}) — 
+                    {% for item in o.items %}{{ item.qty }}x {{ item.title }}{% if not loop.last %}, {% endif %}{% endfor %}
+                </option>
+            {% endfor %}
+        </select>
+    </label>
+
+    <label>Describe the Issue
+        <textarea name="reason" rows="5" placeholder="Explain what went wrong with the product or delivery..." required></textarea>
+    </label>
+
+    <div class="actions">
+        <button type="submit" class="btn">Submit Dispute Request</button>
+        <a href="{{ url_for('buyer.orders') }}" class="btn ghost">Cancel</a>
+    </div>
+</form>
+{% endblock %}

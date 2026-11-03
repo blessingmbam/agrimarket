@@ -1,0 +1,21 @@
+{% import '_m.html' as m with context %}<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="csrf-token" content="{{ csrf_token() }}">
+<title>{% block title %}Harvestline{% endblock %} · Harvestline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}"></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap bar">
+<a class="logo" href="{{ url_for('shop.index') }}">Harvestline</a>
+<button class="burger" aria-label="Menu" aria-expanded="false" data-nav>Menu</button>
+<nav id="nav"><a href="{{ url_for('shop.market') }}">Market</a>
+{% if current_user.is_authenticated %}
+ {% set home = {'buyer': 'buyer.dashboard', 'farmer': 'farmer.dashboard', 'admin': 'admin.dashboard'}[current_user.role] %}
+ <a href="{{ url_for(home) }}">{{ 'Admin' if current_user.role=='admin' else ('My farm' if current_user.role=='farmer' else 'My account') }}</a>
+ <form method="post" action="{{ url_for('auth.logout') }}">{{ m.csrf() }}<button class="link">Sign out</button></form>
+{% else %}<a href="{{ url_for('auth.login') }}">Sign in</a><a class="btn sm" href="{{ url_for('auth.register') }}">Create account</a>{% endif %}
+<a class="cartlink" href="{{ url_for('shop.cart_view') }}">Cart <span id="cart-count" class="pill">{{ cart_count }}</span></a></nav></div></header>
+<div id="toasts" aria-live="polite">{% for c, msg in get_flashed_messages(with_categories=true) %}<div class="toast t-{{ c }}" role="status">{{ msg }}</div>{% endfor %}</div>
+<main id="main" class="wrap">{% block body %}{% endblock %}</main>
+<footer class="wrap foot">Harvestline connects farms directly to the people who eat their food.</footer>
+<script src="{{ url_for('static', filename='js/app.js') }}" defer></script></body></html>

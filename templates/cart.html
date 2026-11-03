@@ -1,0 +1,11 @@
+{% extends 'base.html' %}{% import '_m.html' as m with context %}{% block title %}Cart{% endblock %}{% block body %}<h1>Your cart</h1>
+{% if lines %}<div class="split wide"><div>{% for p, q in lines %}<div class="line"><div class="thumb">{{ m.img(p) }}</div>
+<div><a href="{{ url_for('shop.product', pid=p.id) }}"><b>{{ p.title }}</b></a><p class="muted">₦{{ '{:,.2f}'.format(p.price) }} / {{ p.unit }}</p></div>
+<form method="post" action="{{ url_for('shop.cart_set') }}" class="row">{{ m.csrf() }}<input type="hidden" name="product_id" value="{{ p.id }}">
+<input type="number" name="qty" min="0" max="{{ p.stock }}" value="{{ q }}" aria-label="Quantity"><button class="btn ghost sm">Update</button></form>
+<b>₦{{ '{:,.2f}'.format(p.price * q) }}</b>
+<form method="post" action="{{ url_for('shop.cart_set') }}">{{ m.csrf() }}<input type="hidden" name="product_id" value="{{ p.id }}"><input type="hidden" name="qty" value="0"><button class="link danger">Remove</button></form></div>{% endfor %}</div>
+<aside class="sum"><h2>Summary</h2><p class="row between"><span>Subtotal</span><b>₦{{ '{:,.2f}'.format(total) }}</b></p>
+<a class="btn full" href="{{ url_for('shop.checkout') }}">Proceed to checkout</a>
+{% if not current_user.is_authenticated %}<p class="muted">You'll be asked to sign in or sign up next. Your cart comes with you.</p>{% endif %}</aside></div>
+{% else %}<p class="empty">Your cart is empty.</p><a class="btn" href="{{ url_for('shop.market') }}">Browse the market</a>{% endif %}{% endblock %}

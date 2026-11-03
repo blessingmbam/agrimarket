@@ -1,0 +1,7 @@
+{% extends 'base.html' %}{% import '_m.html' as m with context %}{% block body %}<h1>Order history</h1><nav class="tabs"><a href="{{ url_for('buyer.dashboard') }}">Active orders</a><a class="on" href="{{ url_for('buyer.orders') }}">History</a><a href="{{ url_for('buyer.profile') }}">Profile and addresses</a></nav>
+<div class="scroll"><table><tr><th>Order</th><th>Date</th><th>Farm</th><th>Total</th><th>Status</th><th></th></tr>
+{% for o in orders %}<tr><td>#{{ o.id }}</td><td>{{ o.created.strftime('%d %b %Y') }}</td><td>{{ o.farmer.farm.farm_name if o.farmer.farm else '—' }}</td><td>₦{{ '{:,.2f}'.format(o.total) }}</td><td>{{ m.badge(o.status) }}</td><td><a href="{{ url_for('buyer.invoice', oid=o.id) }}">Receipt</a></td></tr>{% else %}<tr><td colspan="6" class="empty">No orders yet.</td></tr>{% endfor %}</table></div>{% endblock %}
+
+<div class="dispute-banner">
+    <p>Having trouble with an item you received? <a href="{{ url_for('buyer.new_dispute') }}" class="btn ghost">Report a Dispute</a></p>
+</div>

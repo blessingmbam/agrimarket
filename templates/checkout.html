@@ -1,0 +1,7 @@
+{% extends 'base.html' %}{% import '_m.html' as m with context %}{% block title %}Checkout{% endblock %}{% block body %}<h1>Checkout</h1>
+<div class="split wide"><form method="post" class="panel">{{ m.csrf() }}<h2>Delivery address</h2>
+{% for a in addresses %}<label class="radio"><input type="radio" name="address_id" value="{{ a.id }}" {{ 'checked' if loop.first }} required><span><b>{{ a.label or 'Address' }}</b><br>{{ a.line1 }}, {{ a.city }}</span></label>
+{% else %}<p class="empty">Add an address first.</p>{% endfor %}
+<a href="{{ url_for('buyer.profile') }}" class="link">Manage addresses</a><br><br>{% if addresses %}<button class="btn">Place order</button>{% endif %}</form>
+<aside class="sum"><h2>Order</h2>{% for p, q in lines %}<p class="row between"><span>{{ q }} × {{ p.title }}</span><span>₦{{ '{:,.2f}'.format(p.price*q) }}</span></p>{% endfor %}
+<p class="row between"><b>Total</b><b>₦{{ '{:,.2f}'.format(total) }}</b></p><p class="muted">Payment is arranged on delivery until a gateway is connected.</p></aside></div>{% endblock %}

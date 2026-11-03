@@ -1,0 +1,23 @@
+{% extends 'base.html' %}{% import '_m.html' as m with context %}{% block body %}
+<h1>Hello, {{ current_user.name.split()[0] }}</h1>
+<nav class="tabs">
+    <a class="on" href="{{ url_for('buyer.dashboard') }}">Active orders</a>
+    <a href="{{ url_for('buyer.orders') }}">History</a>
+    <a href="{{ url_for('buyer.profile') }}">Profile and addresses</a>
+    <a href="{{ url_for('buyer.new_dispute') }}">New dispute</a>
+</nav>
+
+{% for o in active %}
+<div class="panel">
+    <div class="row between">
+        <b>Order #{{ o.id }} · {{ o.farmer.farm.farm_name if o.farmer.farm else 'Farm' }}</b>
+        <span>₦{{ '{:,.2f}'.format(o.total) }}</span>
+    </div>
+    {{ m.track(o.status) }}
+    <a href="{{ url_for('buyer.invoice', oid=o.id) }}">View receipt</a>
+</div>
+{% else %}
+<p class="empty">No active orders. Fresh produce is a few taps away.</p>
+<a class="btn" href="{{ url_for('shop.market') }}">Browse the market</a>
+{% endfor %}
+{% endblock %}

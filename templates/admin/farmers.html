@@ -1,0 +1,4 @@
+{% extends 'base.html' %}{% import '_m.html' as m with context %}{% block body %}<h1>Farm verification</h1>{% include 'admin/_tabs.html' %}
+{% for f in fps %}<div class="panel"><div class="row between"><b>{{ f.farm_name }} · {{ f.location }}</b>{{ m.badge(f.status|capitalize) }}</div><p class="muted">{{ f.user.name }} · {{ f.user.email }}</p><p>{{ f.bio }}</p><p><b>Credentials:</b> {{ f.credentials or 'None provided' }}</p>
+<form method="post" action="{{ url_for('admin.farmer_decide', fid=f.id) }}" class="row">{{ m.csrf() }}<input name="note" placeholder="Note to farmer (optional)" aria-label="Note"><button class="btn sm" name="decision" value="approved">Approve</button><button class="btn sm ghost danger" name="decision" value="rejected">Reject</button></form></div>
+{% else %}<p class="empty">No farm profiles yet.</p>{% endfor %}{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'base.html' %}{% import '_m.html' as m with context %}{% block body %}
+<section class="hero"><div><h1>Buy from the person who grew it.</h1>
+<p class="lead">Browse produce, livestock and dairy from verified local farms. Fill a cart first, sign in only when you're ready to pay.</p>
+<form class="search" action="{{ url_for('shop.market') }}"><input name="q" placeholder="Search tomatoes, eggs, goat…" aria-label="Search products"><button class="btn">Search</button></form>
+<p class="chips">{% for c in cats %}<a class="chip" href="{{ url_for('shop.market', cat=c.id) }}">{{ c.name }}</a>{% endfor %}</p></div>
+<div class="hero-stamp" aria-hidden="true"><span>Harvested</span><b>this week</b></div></section>
+<h2>Just picked</h2>
+<div class="grid">{% for p in feats %}{{ m.card(p) }}{% else %}<p class="empty">No listings yet. Farms appear here once verified.</p>{% endfor %}</div>
+<section class="band"><h2>Selling what you grow?</h2><p>Set up a farm profile, get verified, and list your harvest in minutes.</p><a class="btn alt" href="{{ url_for('auth.register') }}">Start selling</a></section>{% endblock %}

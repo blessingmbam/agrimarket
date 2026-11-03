@@ -1,0 +1,4 @@
+{% extends 'base.html' %}{% import '_m.html' as m with context %}{% block body %}<section class="narrow panel"><h1>Your farm profile</h1><p class="muted">Our team reviews every farm before listings go live.</p>
+<form method="post">{{ m.csrf() }}<label>Farm name<input name="farm_name" required value="{{ fp.farm_name if fp }}"></label><label>Location (town, state)<input name="location" required value="{{ fp.location if fp }}"></label>
+<label>About your farm<textarea name="bio">{{ fp.bio if fp and fp.bio }}</textarea></label><label>Credentials (registration number, certifications, cooperative)<textarea name="credentials">{{ fp.credentials if fp and fp.credentials }}</textarea></label>
+{% if fp and fp.admin_note %}<p class="note">Reviewer note: {{ fp.admin_note }}</p>{% endif %}<button class="btn">Submit for verification</button></form></section>{% endblock %}

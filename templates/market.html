@@ -1,0 +1,14 @@
+{% extends 'base.html' %}{% import '_m.html' as m with context %}{% block title %}Market{% endblock %}{% block body %}
+<h1>Market</h1><div class="split">
+<form class="filters" method="get"><label>Search<input name="q" value="{{ filtered_args.q or '' }}"></label>
+<label>Category<select name="cat"><option value="">All</option>{% for c in cats %}<option value="{{ c.id }}" {{ 'selected' if filtered_args.cat|string == c.id|string }}>{{ c.name }}</option>{% endfor %}</select></label>
+<div class="two"><label>Min ₦<input name="min" inputmode="decimal" value="{{ filtered_args.min or '' }}"></label><label>Max ₦<input name="max" inputmode="decimal" value="{{ filtered_args.max or '' }}"></label></div>
+<label>Location<input name="loc" value="{{ filtered_args.loc or '' }}"></label>
+<label>Harvested within<select name="fresh">{% for d, t in [(0,'Any time'),(1,'1 day'),(3,'3 days'),(7,'7 days'),(30,'30 days')] %}<option value="{{ d }}" {{ 'selected' if filtered_args.fresh|string == d|string }}>{{ t }}</option>{% endfor %}</select></label>
+<label>Sort<select name="sort">{% for k, t in [('new','Newest'),('fresh','Freshest'),('low','Price: low to high'),('high','Price: high to low')] %}<option value="{{ k }}" {{ 'selected' if filtered_args.sort == k }}>{{ t }}</option>{% endfor %}</select></label>
+<button class="btn">Apply filters</button></form>
+<div><div class="grid">{% for p in page.items %}{{ m.card(p) }}{% else %}<p class="empty">Nothing matches those filters. Try widening the price range or location.</p>{% endfor %}</div>
+<nav class="pager">
+{% if page.has_prev %}<a class="btn ghost" href="{{ url_for('shop.market', page=page.prev_num, **filtered_args) }}">Previous</a>{% endif %}
+{% if page.has_next %}<a class="btn ghost" href="{{ url_for('shop.market', page=page.next_num, **filtered_args) }}">Next</a>{% endif %}
+</nav></div></div>{% endblock %}

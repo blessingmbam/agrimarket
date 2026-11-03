@@ -1,0 +1,10 @@
+{% extends 'base.html' %}{% import '_m.html' as m with context %}{% block title %}{{ 'Sign in' if mode=='login' else 'Create account' }}{% endblock %}{% block body %}
+<section class="narrow panel"><h1>{{ 'Sign in' if mode=='login' else 'Create your account' }}</h1>
+{% if cart_count and next %}<p class="note">Your {{ cart_count }} cart item{{ 's' if cart_count != 1 }} will be waiting after you {{ 'sign in' if mode=='login' else 'sign up' }}.</p>{% endif %}
+<form method="post" novalidate>{{ m.csrf() }}{% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+{% if mode=='register' %}<label>Full name<input name="name" required autocomplete="name"></label><label>Phone<input name="phone" autocomplete="tel"></label>
+<fieldset class="seg"><legend>I want to</legend><label><input type="radio" name="role" value="buyer" checked>Buy produce</label><label><input type="radio" name="role" value="farmer">Sell my harvest</label></fieldset>{% endif %}
+<label>Email<input type="email" name="email" required autocomplete="email"></label>
+<label>Password<input type="password" name="password" required minlength="{{ 10 if mode=='register' else 1 }}" autocomplete="{{ 'new-password' if mode=='register' else 'current-password' }}"></label>
+<button class="btn full">{{ 'Sign in' if mode=='login' else 'Create account' }}</button></form>
+<p class="muted">{% if mode=='login' %}New here? <a href="{{ url_for('auth.register', next=next) }}">Create an account</a>{% else %}Have an account? <a href="{{ url_for('auth.login', next=next) }}">Sign in</a>{% endif %}</p></section>{% endblock %}

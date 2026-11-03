@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% import '_m.html' as m with context %}{% block body %}<section class="narrow panel"><h1>{{ 'Edit listing' if p else 'New listing' }}</h1>
+<form method="post" enctype="multipart/form-data">{{ m.csrf() }}<label>Title<input name="title" required maxlength="150" value="{{ p.title if p }}"></label>
+<label>Category<select name="category_id" required>{% for c in cats %}<option value="{{ c.id }}" {{ 'selected' if p and p.category_id == c.id }}>{{ c.name }}</option>{% endfor %}</select></label>
+<div class="two"><label>Price (₦)<input name="price" inputmode="decimal" required value="{{ p.price if p }}"></label><label>Unit<input name="unit" value="{{ p.unit if p else 'kg' }}" maxlength="20"></label></div>
+<div class="two"><label>Stock<input type="number" name="stock" min="0" value="{{ p.stock if p else 0 }}"></label><label>Harvest date<input type="date" name="harvest_date" max="{{ today }}" required value="{{ p.harvest_date if p else today }}"></label></div>
+<label>Pickup location<input name="location" value="{{ p.location if p }}"></label><label>Description<textarea name="description">{{ p.description if p and p.description }}</textarea></label>
+<label>Photo (JPG, PNG or WebP, up to 5 MB)<input type="file" name="image" accept="image/jpeg,image/png,image/webp" data-preview></label>
+<label class="check"><input type="checkbox" name="is_active" {{ 'checked' if not p or p.is_active }}> Visible in the market</label><button class="btn">Save listing</button></form></section>{% endblock %}

@@ -1,0 +1,8 @@
+{% macro csrf() %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endmacro %}
+{% macro img(p) %}{% if p.image %}<img src="{{ url_for('static', filename='uploads/' ~ p.image) }}" alt="{{ p.title }}" loading="lazy" class="ph">{% else %}<div class="ph ph-empty">No photo</div>{% endif %}{% endmacro %}
+{% macro stamp(p) %}<span class="stamp">{% if p.freshness_days <= 0 %}Picked today{% elif p.freshness_days == 1 %}Picked yesterday{% else %}Picked {{ p.freshness_days }} days ago{% endif %}</span>{% endmacro %}
+{% macro card(p) %}<a class="card" href="{{ url_for('shop.product', pid=p.id) }}"><div class="media skel">{{ img(p) }}{{ stamp(p) }}</div>
+<div class="cbody"><h3>{{ p.title }}</h3><p class="muted">{{ p.farmer.farm.farm_name if p.farmer.farm else 'Local farm' }} · {{ p.location }}</p>
+<p class="price">₦{{ '{:,.2f}'.format(p.price) }}<small> / {{ p.unit }}</small></p></div></a>{% endmacro %}
+{% macro badge(s) %}<span class="badge b-{{ s|lower }}">{{ s }}</span>{% endmacro %}
+{% macro track(s) %}{% if s == 'Canceled' %}{{ badge(s) }}{% else %}<ol class="track">{% for st in STATUSES %}<li class="{{ 'on' if STATUSES.index(st) <= STATUSES.index(s) }}">{{ st }}</li>{% endfor %}</ol>{% endif %}{% endmacro %}

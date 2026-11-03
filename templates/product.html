@@ -1,0 +1,10 @@
+{% extends 'base.html' %}{% import '_m.html' as m with context %}{% block title %}{{ p.title }}{% endblock %}{% block body %}
+<article class="pdp"><div class="media big skel">{{ m.img(p) }}{{ m.stamp(p) }}</div>
+<div><h1>{{ p.title }}</h1><p class="muted">{{ p.category.name }} · {{ p.location }}</p>
+<p class="price lg">₦{{ '{:,.2f}'.format(p.price) }}<small> / {{ p.unit }}</small></p>
+<p>{{ p.description or 'The farmer hasn’t added a description yet.' }}</p>
+<dl class="facts"><dt>Farm</dt><dd>{{ p.farmer.farm.farm_name if p.farmer.farm else '—' }}</dd><dt>Harvested</dt><dd>{{ p.harvest_date.strftime('%d %b %Y') }}</dd><dt>In stock</dt><dd>{{ p.stock }} {{ p.unit }}</dd></dl>
+{% if p.stock > 0 and p.is_active %}<form method="post" action="{{ url_for('shop.cart_set') }}" data-ajax class="row">{{ m.csrf() }}
+<input type="hidden" name="product_id" value="{{ p.id }}"><input type="hidden" name="mode" value="add">
+<label class="qty">Quantity<input type="number" name="qty" min="1" max="{{ p.stock }}" value="1"></label><button class="btn">Add to cart</button></form>
+{% if in_cart %}<p class="muted">{{ in_cart }} already in your cart.</p>{% endif %}{% else %}<p class="badge b-canceled">Out of stock</p>{% endif %}</div></article>{% endblock %}
